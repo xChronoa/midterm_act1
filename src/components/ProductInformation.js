@@ -12,6 +12,7 @@ const ProductInformation = (props) => {
             <p className="desc">Description: {props.description} </p>
             <p className="price">Price: {props.price.toFixed(2)} </p>
         </>
+        
     );
 }
 
