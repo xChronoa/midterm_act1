@@ -5,6 +5,7 @@ import React from "react";
 // ProductInformation Component
 
 const ProductInformation = (props) => {
+
     return(
         // F. Props Management
         <>
