@@ -1,12 +1,11 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import ProductInformation from "./ProductInformation";
+import ViewCart from "./ViewCart";
 
-// E. Component-based Architecture 
-// Product Component
 const Product = () => {
-    // F. State Management
     const [cart, setCart] = useState([]);
     const [totalPrice, setTotalPrice] = useState(0);
+    const [viewCart, setViewCart] = useState(false);
 
     let products = [
         {name: "Safeguard", description: "Safeguard Pure White Tripid Bar Soap", price: 70.00},
@@ -16,18 +15,13 @@ const Product = () => {
         {name: "Joy Dishwashing Liquid", description: "Joy Dishwashing Liquid Antibac Hygine 1000ml", price: 305.00},
         {name: "Petroleum Jelly", description: "Vaseline Petroleum Jelly 100ml", price: 118.00},
         {name: "Corned Beef", description: "Argentina Corned Beef 260g Pack of 3", price: 177.00},
-        {name: "Century Tuna Flakes", description: "entury Tuna Flakes in Oil 155g Pack of 3", price: 114.00},
+        {name: "Century Tuna Flakes", description: "Century Tuna Flakes in Oil 155g Pack of 3", price: 114.00},
         {name: "San Marino Corned Tuna", description: "San Marino Corned Tuna Chili 180g", price: 54.00},
         {name: "Purefoods Sisig", description: "Purefoods Sizzling Delights Sisig (150g) Set of 2", price: 92.00}
     ];
 
-    // C. Add to Cart Functionality
     const addToCart = (productToAdd) => {
-        // Check if the product already exists in the cart.
         const existingProduct = cart.find(product => product.name === productToAdd.name);
-
-        // If it already exists increment the quantity.
-        // Otherwise, add it to the cart.
         if (existingProduct) {
             const updatedCart = cart.map(product => 
                 product.name === productToAdd.name ? {...product, quantity: product.quantity + 1} : product
@@ -37,36 +31,45 @@ const Product = () => {
             const newCart = [...cart, {...productToAdd, quantity: 1}];
             setCart(newCart);
         }
-
-        // Sum up the total price of the cart.
         setTotalPrice(prevTotal => prevTotal + productToAdd.price);
     };
 
-    return(
-        <>
-            {/* D. Cart Summary */}
-            <div id="cart-summary">
-                <h2>Cart Summary</h2>
-                <p>Total Items: {cart.length}</p>
-                <p>Total Price: {totalPrice.toFixed(2)}</p>
-                
-                {/* Display product in the cart */}
-                <ul>
-                    {cart.map((item, index) => (
-                        <li key={index}>{item.name} - {item.price.toFixed(2)} - Quantity: {item.quantity}</li>
-                    ))}
-                </ul>
-            </div>
+    const removeFromCart = (productToRemove) => {
+        const updatedCart = cart.filter(item => item.name !== productToRemove.name);
+        setCart(updatedCart);
+        setTotalPrice(prevTotal => prevTotal - (productToRemove.price * productToRemove.quantity));
+    };
 
-            {/* Add each individual product information to product information component */}
-            <div id="products">
-                {products.map((product, index) => (
-                    <div className="product" key={index}>
-                        <ProductInformation name={product.name} description={product.description} price={product.price}/>
-                        <button className="btnAddToCart" onClick={() => addToCart(product)}>Add to Cart</button>
-                    </div>
-                ))}
-            </div>
+    const handleCheckout = () => {
+        alert("Thank you for your purchase!");
+        setCart([]);
+        setTotalPrice(0);
+        setViewCart(false);
+    };
+
+    return (
+        <>
+            {viewCart ? (
+                <ViewCart
+                    cart={cart}
+                    totalPrice={totalPrice}
+                    removeFromCart={removeFromCart}
+                    checkout={handleCheckout}
+                />
+            ) : (
+                <div id="products">
+                    {products.map((product, index) => (
+                        <div className="product" key={index}>
+                            <ProductInformation name={product.name} description={product.description} price={product.price}/>
+                            <button className="btnAddToCart" onClick={() => addToCart(product)}>Add to Cart</button>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <button onClick={() => setViewCart(!viewCart)}>
+                {viewCart ? "Back to Products" : "View Cart"}
+            </button>
         </>
     );
 }
