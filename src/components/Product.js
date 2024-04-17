@@ -44,6 +44,20 @@ const Product = () => {
 
     return(
         <>
+            {/* D. Cart Summary */}
+            <div id="cart-summary">
+                <h2>Cart Summary</h2>
+                <p>Total Items: {cart.length}</p>
+                <p>Total Price: {totalPrice.toFixed(2)}</p>
+                
+                {/* Display product in the cart */}
+                <ul>
+                    {cart.map((item, index) => (
+                        <li key={index}>{item.name} - {item.price.toFixed(2)} - Quantity: {item.quantity}</li>
+                    ))}
+                </ul>
+            </div>
+
             {/* Add each individual product information to product information component */}
             <div id="products">
                 {products.map((product, index) => (
